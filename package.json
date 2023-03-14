@@ -1,0 +1,25 @@
+{
+  "name": "login-server",
+  "version": "1.0.0",
+  "description": "BOC login and signup and signout server",
+
+  "scripts": {
+    "test": "test",
+    "start": "nodemon server/index.js"
+  },
+  "author": "Debra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hackreactor-2207-BugBusters-BOC/Login-Server/issues"
+  },
+  "homepage": "https://github.com/Hackreactor-2207-BugBusters-BOC/Login-Server#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "pg": "^8.10.0"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "nodemon": "^2.0.21"
+  }
+}
