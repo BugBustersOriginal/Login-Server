@@ -8,13 +8,13 @@ const crypto = require('crypto');
 
 /**
  * Creates a hash using the sha256 algorithm. The salt is optional.
- * @param {string} data - The data to hash: password user input
+ * @param {string} password - The data to hash: password user input
  * @param {string} [salt] - The salt to add to the data before hashing.
  * @returns {string} A string with the hashed value.
  */
- exports.createHash = (data, salt = '') => {
+ exports.createHash = (password, salt = '') => {
   let shasum = crypto.createHash('sha256');
-  shasum.update(data + salt);
+  shasum.update(password + salt);
   return shasum.digest('hex');
 };
 
