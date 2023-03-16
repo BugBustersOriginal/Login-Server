@@ -44,6 +44,31 @@ const getUser = async ({username}) => {
   }
 
 };
+//compare password
+const comparePassword = (actual, passwordHashed, salt) => {
+  return passwordHashed === utils.createHash(actual, salt);
+
+};
+
+//create session
+const createSession = async ({userId}) => {
+  const client = await db.connect();
+  const query = {
+    text: 'INSERT INTO session(sess) VALUES($1) RETURNING *',
+    values: [{userId}]
+  };
+  try {
+    const result = await db.query(query);
+    return result.rows[0];
+  } catch(err) {
+    console.log('create session error', err);
+  } finally {
+    client.release();
+  }
+};
+
+
+
 
 //update a user in users db
 const updatePassward = () => {
@@ -62,10 +87,6 @@ const addAvator = () => {
 
 };
 
-//create session
-const addSession = () => {
-
-};
 
 //update session
 const updateSession = () => {
@@ -81,4 +102,4 @@ const deleteSession = () => {
 const getSession = () => {
 
 };
-module.exports = {createUser, getUser}
+module.exports = {createUser, getUser, comparePassword, createSession}

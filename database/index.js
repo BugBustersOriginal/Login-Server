@@ -46,12 +46,11 @@ const pool = new Pool({
     //create session table to authication
     const createSessionQuery = `
     CREATE TABLE IF NOT EXISTS session  (
-      s_id VARCHAR(255) NOT NULL PRIMARY KEY,
+      sid VARCHAR(255) NOT NULL PRIMARY KEY,
       sess JSON NOT NULL,
-      user_id UUID,
-      expire TIMESTAMP(6) NOT NULL,
-      FOREIGN KEY (user_id) REFERENCES users(id)
-    )`;
+      expire TIMESTAMP(6) NOT NULL
+    )
+    WITH (OIDS=FALSE);`;
     await client.query(createSessionQuery);
     console.log('session created successfully');
 

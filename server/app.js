@@ -29,7 +29,7 @@ app.use(session({
   secret: process.env.FOO_COOKIE_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge:  60 * 1000 } // 1min
+  cookie: { maxAge:   60 * 1000 } // 1min
 }));
 
 app.get('/signup', getSignUp );
