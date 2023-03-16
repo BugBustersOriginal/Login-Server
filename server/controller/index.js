@@ -70,11 +70,11 @@ const postLogIn = async (req, res) => {
               if (err) {
                 reject(err);
               } else {
-                resolve();
+
+                resolve(console.log('set session success'));
               }
             });
           });
-          console.log('set session success')
           //check if avatar and address is empty
           if (findUser.avatar_id === null || findUser.zipcode === null || findUser.country === null) {
             res.send('password correct, redirct to settings page')
