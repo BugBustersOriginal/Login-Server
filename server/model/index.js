@@ -46,10 +46,16 @@ const getUser = async ({username}) => {
 };
 
 //update a user in users db
-const updateUser = () => {
+const updatePassward = () => {
 
 };
 
+const updateAddress = () => {
+
+};
+const updateAvatorId = () => {
+
+};
 
 //create avator
 const addAvator = () => {
