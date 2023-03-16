@@ -6,9 +6,19 @@ const pgSession = require('connect-pg-simple')(session);
 const {getSignUp, postSignUp, getLogIn, postLogIn, getLogOut, getGmailAuth} = require('./controller/index.js');
 const pgPool = require('../database/index.js');
 
+//create http to https middleware
+// function redirectToHttps(req, res, next) {
+//   if (req.headers['x-forwarded-proto'] !== 'https') {
+//     return res.redirect(`https://${req.hostname}${req.url}`);
+//   }
+//   return next();
+// }
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//use redirectToHttps as middleware
+// app.use(redirectToHttps);
 
 //use connect-pg-simple to create session
 app.use(session({
