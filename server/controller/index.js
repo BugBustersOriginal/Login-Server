@@ -1,4 +1,4 @@
-const {createUser, getUser, comparePassword} = require('../model')
+const {createUser, getUser, comparePassword, updatePassward} = require('../model')
 
 const getSignUp = (req, res) => {
   //render signup page
@@ -8,20 +8,35 @@ const getSignUp = (req, res) => {
 
 /*****  by username and password to sign up *******/
 const postSignUp = async (req, res) => {
+/*dummy data
+{
+  firstname: 'debra',
+  lastname: 'zhang',
+  username: 'debrazhang',
+  password: 1234,
+  address1: 'optional',
+  address2: 'optional',
+  city: 'optional',
+  state: 'optinal',
+  country: 'US',
+  zipcode: 94538,
+  photo: 'https://as2.ftcdn.net/v2/jpg/03/03/62/45/1000_F_303624505_u0bFT1Rnoj8CMUSs8wMCwoKlnWlh5Jiq.jpg'
+}
 
+*/
   // check request has both username and password
   if (req.body.username === undefined || req.body.password === undefined) {
     res.send('should input both username and password, redirect to signup page');
   }
-  const {username, password} = req.body;
+  const {username} = req.body;
 
   try {
     let findUser = await getUser({username});
     if (findUser === null) {
-      //new user
-     let addUser = await createUser({username, password});
+      //new user,send body data into createUser function
+     let addUser = await createUser(req.body);
 
-     //render login page
+     //render login page, can it go direct into main page?
      res.send('signup success, should render login page');
     } else {
      //user exist, render signup page
@@ -31,8 +46,8 @@ const postSignUp = async (req, res) => {
     console.log('signup error', err);
   }
 };
+
 const getLogIn = (req, res) => {
-  console.log(req.session)
   if (req.session.userId ) {
     res.send(`hello, userId=${req.session.userId}`)
   } else {
@@ -70,18 +85,12 @@ const postLogIn = async (req, res) => {
               if (err) {
                 reject(err);
               } else {
-
-                resolve(console.log('set session success'));
+                resolve(console.log(`set session success, userId=${userId}`));
               }
             });
           });
-          //check if avatar and address is empty
-          if (findUser.avatar_id === null || findUser.zipcode === null || findUser.country === null) {
-            res.send('password correct, redirct to settings page')
-          } else {
-            //render to app main page
-            res.send('render app main page')
-          }
+          //render to app main page
+          res.send('seesion set success, render app main page')
         } else {
           //user exist, password not correct, redirect to login page
           res.send('password incorrect, redirect to login page');
@@ -91,23 +100,8 @@ const postLogIn = async (req, res) => {
   } else {
     res.send('exist user, render app main page')
   }
-
-
-
-
-  //first login successnot have cookie and session or cookie expire
-
-
-
-
 };
 
-const postAddress = (req, res) => {
-
-};
-const postAvator = (req, res) => {
-
-};
 const forgetOrChangePassword = (req, res) => {
 
 };
@@ -118,4 +112,4 @@ const getLogOut = (req, res) => {
 const getGmailAuth = (req, res) => {
 
 };
-module.exports = {getSignUp, postSignUp, getLogIn, postLogIn, getLogOut, getGmailAuth};
+module.exports = {getSignUp, postSignUp, getLogIn, postLogIn,forgetOrChangePassword, getLogOut, getGmailAuth};

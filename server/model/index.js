@@ -2,17 +2,17 @@ const db = require('../../database');
 const utils = require('../lib/hashUtils');
 
 //create a user in users db
-const createUser = async ({username, password}) => {
+const createUser = async ({firstname, lastname, username, password, address1, address2, city, state, country, zipcode, photo}) => {
   const client = await db.connect();
+  let options = {firstname, lastname, username, password, address1, address2, city, state, country, zipcode, photo};
   let salt = utils.createRandom32String();
-  let newUser = {
-    username,
-    salt,
-    password: utils.createHash(password, salt)
-  };
+  let passwordHashed = utils.createHash(options.password, salt);
+
+  let newUser = [options.firstname, options.lastname, options.username, passwordHashed, salt, options.photo, options.address1, options.address2, options.city, options.state, options.country, options.zipcode]
+
   const query = {
-    text: 'INSERT INTO users(username, password, salt) VALUES($1, $2, $3) RETURNING *',
-    values: [newUser.username, newUser.password, newUser.salt]
+    text: 'INSERT INTO users(firstname, lastname, username, password, salt, avatar_url, address1, address2, city, state, country, zipcode) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
+    values: newUser
   };
   try {
     const result = await db.query(query);
@@ -50,56 +50,12 @@ const comparePassword = (actual, passwordHashed, salt) => {
 
 };
 
-//create session
-const createSession = async ({userId}) => {
-  const client = await db.connect();
-  const query = {
-    text: 'INSERT INTO session(sess) VALUES($1) RETURNING *',
-    values: [{userId}]
-  };
-  try {
-    const result = await db.query(query);
-    return result.rows[0];
-  } catch(err) {
-    console.log('create session error', err);
-  } finally {
-    client.release();
-  }
-};
 
 
-
-
-//update a user in users db
+//update change password or update password
 const updatePassward = () => {
 
 };
 
-const updateAddress = () => {
 
-};
-const updateAvatorId = () => {
-
-};
-
-//create avator
-const addAvator = () => {
-
-};
-
-
-//update session
-const updateSession = () => {
-
-};
-
-//delete session
-const deleteSession = () => {
-
-};
-
-//find session
-const getSession = () => {
-
-};
-module.exports = {createUser, getUser, comparePassword, createSession}
+module.exports = {createUser, getUser, comparePassword, updatePassward}

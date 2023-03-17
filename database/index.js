@@ -13,13 +13,13 @@ const pool = new Pool({
   const client = await pool.connect();
   try {
     //create avator table to save users icon
-    const createAvatarQuery = `
-    CREATE TABLE IF NOT EXISTS avatar (
-      id SERIAL PRIMARY KEY,
-      url VARCHAR(255)
-    )`;
-    await client.query(createAvatarQuery);
-    console.log('avatar created successfully');
+    // const createAvatarQuery = `
+    // CREATE TABLE IF NOT EXISTS avatar (
+    //   id SERIAL PRIMARY KEY,
+    //   url VARCHAR(255)
+    // )`;
+    // await client.query(createAvatarQuery);
+    // console.log('avatar created successfully');
 
     //create user table to save users account and address
     await client.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
@@ -27,19 +27,21 @@ const pool = new Pool({
     const createUsersQuery = `
       CREATE TABLE IF NOT EXISTS users (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        firstname VARCHAR(50),
+        lastname VARCHAR(50),
         username VARCHAR(50) UNIQUE,
         password VARCHAR(64),
         salt VARCHAR(64),
         google_id VARCHAR(255) UNIQUE,
         create_at TIMESTAMP NOT NULL DEFAULT NOW(),
-        avatar_id INTEGER,
+        avatar_url VARCHAR(255),
         address1 TEXT,
         address2 TEXT,
+        city VARCHAR(20),
+        state VARCHAR(20),
         country VARCHAR(20),
-        zipcode VARCHAR(10),
-        FOREIGN KEY (avatar_id) REFERENCES avatar(id)
-      )
-    `;
+        zipcode VARCHAR(10)
+      )`;
     await client.query(createUsersQuery);
     console.log('users created successfully');
 
