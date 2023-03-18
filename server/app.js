@@ -3,7 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 
-const {getSignUp, postSignUp, getLogIn, postLogIn, forgetPassword, getSettings, changePassword,getLogOut, getGmailAuth} = require('./controller/index.js');
+const {getSignUp, postSignUp, getLogIn, postLogIn, forgetPassword, getSettings, changePassword, getLogOut, getGmailAuth} = require('./controller/index.js');
 const pgPool = require('../database/index.js');
 
 //create http to https middleware
@@ -29,7 +29,7 @@ app.use(session({
   secret: process.env.FOO_COOKIE_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge:   60 * 1000 } // 1min
+  cookie: { maxAge:  5* 60 * 1000 } // 5min
 }));
 
 app.get('/signup', getSignUp );

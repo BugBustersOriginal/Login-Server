@@ -126,7 +126,12 @@ const changePassword = async (req, res) => {
   }
 };
 
-const getLogOut = (req, res) => {
+const getLogOut = async(req, res) => {
+  const { sessionId } = req.session;
+  req.session.destroy();
+  res.clearCookie('connect.sid');
+  console.log("session delete success");
+  res.send('render login page');
 
 };
 

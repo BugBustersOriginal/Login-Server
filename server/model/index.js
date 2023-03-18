@@ -91,12 +91,20 @@ const updatePassward = async ({userId, newPassword, salt}) => {
   } finally {
     client.release();
   }
-
-
-
-
-
 };
+
+// const deleteSession = async() => {
+//   const client = await db.connect();
+//   try {
+
+//     console.log(`session delete successfully.`);
+//   } catch(err) {
+//     console.log('delete session error', err.stack);
+//   } finally {
+//     client.release();
+//   }
+
+// }
 
 
 module.exports = {createUser, getUser, getUserById, comparePassword, updatePassward}
