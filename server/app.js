@@ -3,7 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 
-const {getSignUp, postSignUp, getLogIn, postLogIn,forgetOrChangePassword, getLogOut, getGmailAuth} = require('./controller/index.js');
+const {getSignUp, postSignUp, getLogIn, postLogIn, forgetPassword, getSettings, changePassword,getLogOut, getGmailAuth} = require('./controller/index.js');
 const pgPool = require('../database/index.js');
 
 //create http to https middleware
@@ -36,6 +36,12 @@ app.get('/signup', getSignUp );
 app.post('/signup', postSignUp);
 app.get('/login', getLogIn);
 app.post('/login',postLogIn);
+app.get('/forgetPassword', forgetPassword);
+// app.post('/forgetPassword', updatePassword);
+
+app.get('/settings', getSettings);
+app.post('/changePassword', changePassword);
+
 app.get('/logout', getLogOut);
 app.get('/gmailAuth', getGmailAuth)
 

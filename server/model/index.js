@@ -23,7 +23,7 @@ const createUser = async ({firstname, lastname, username, password, address1, ad
     client.release();
   }
 };
-//find a user in users db
+//find a user by username in users db
 const getUser = async ({username}) => {
   const client = await db.connect();
   let queryValue = {username};
@@ -42,8 +42,28 @@ const getUser = async ({username}) => {
   } finally {
     client.release();
   }
-
 };
+
+//find a user by userId in users db
+const getUserById = async({id}) => {
+  const client = await db.connect();
+  let queryValue = {id};
+  const query = {
+    text: 'SELECT * FROM users WHERE id = $1',
+    values: [queryValue.id],
+  };
+  try {
+    const result = await db.query(query);
+    if (result.rowCount === 0) {
+      return null; //no record is found
+    }
+    return result.rows[0];
+  } catch(err) {
+    console.log('get user by error', err.stack);
+  } finally {
+    client.release();
+  }
+}
 //compare password
 const comparePassword = (actual, passwordHashed, salt) => {
   return passwordHashed === utils.createHash(actual, salt);
@@ -52,10 +72,31 @@ const comparePassword = (actual, passwordHashed, salt) => {
 
 
 
-//update change password or update password
-const updatePassward = () => {
+// update password
+const updatePassward = async ({userId, newPassword, salt}) => {
+  const client = await db.connect();
+
+  let options = {userId, newPassword, salt};
+  let passwordHashed = utils.createHash(options.newPassword, options.salt);
+  const query = {
+    text: 'UPDATE users SET password = $1 WHERE id = $2',
+
+    values: [passwordHashed, options.userId],
+  };
+  try {
+    const result = await db.query(query);
+    console.log(`Record with id ${options.userId} updated password successfully.`);
+  } catch(err) {
+    console.log('update password error', err.stack);
+  } finally {
+    client.release();
+  }
+
+
+
+
 
 };
 
 
-module.exports = {createUser, getUser, comparePassword, updatePassward}
+module.exports = {createUser, getUser, getUserById, comparePassword, updatePassward}

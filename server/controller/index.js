@@ -1,4 +1,4 @@
-const {createUser, getUser, comparePassword, updatePassward} = require('../model')
+const {createUser, getUser, getUserById, comparePassword, updatePassward} = require('../model')
 
 const getSignUp = (req, res) => {
   //render signup page
@@ -102,14 +102,37 @@ const postLogIn = async (req, res) => {
   }
 };
 
-const forgetOrChangePassword = (req, res) => {
+const forgetPassword = (req, res) => {
+  res.send('should render forget password');
 
+};
+
+const getSettings = (req, res) => {
+  res.send('rend settings');
+}
+//change password in settings(userId exist in db)
+const changePassword = async (req, res) => {
+  //suppose req.url has userId,
+  //request has the origin password and new password
+  //req.body = {originPassword: '', newPassword: ''};
+  let userId = '4cf032b6-bf19-4fbd-bbca-aa677122c225';
+  let user = await getUserById({id: userId});
+  if (comparePassword(req.body.originPassword, user.password, user.salt)) {
+    //password correct, change with new password with the previous salt
+    await updatePassward({userId, newPassword: req.body.newPassword, salt: user.salt});
+    res.send('change password successfully');
+  } else {
+    res.send('password wrong, rerender changePassword page');
+  }
 };
 
 const getLogOut = (req, res) => {
 
 };
+
+
+//not implement yet
 const getGmailAuth = (req, res) => {
 
 };
-module.exports = {getSignUp, postSignUp, getLogIn, postLogIn,forgetOrChangePassword, getLogOut, getGmailAuth};
+module.exports = {getSignUp, postSignUp, getLogIn, postLogIn, forgetPassword, changePassword, getSettings, getLogOut, getGmailAuth};
