@@ -73,19 +73,19 @@ const comparePassword = (actual, passwordHashed, salt) => {
 
 
 // update password
-const updatePassward = async ({userId, newPassword, salt}) => {
+const updatePassward = async (userId, newPassword) => {
   const client = await db.connect();
 
-  let options = {userId, newPassword, salt};
-  let passwordHashed = utils.createHash(options.newPassword, options.salt);
-  const query = {
-    text: 'UPDATE users SET password = $1 WHERE id = $2',
 
-    values: [passwordHashed, options.userId],
+  let salt = utils.createRandom32String();
+  let passwordHashed = utils.createHash(newPassword, salt);
+  const query = {
+    text: 'UPDATE users SET password = $1, salt= $2 WHERE id = $3',
+    values: [passwordHashed, salt, userId]
   };
   try {
     const result = await db.query(query);
-    console.log(`Record with id ${options.userId} updated password successfully.`);
+    console.log(`Record with id ${userId} updated password successfully.`);
   } catch(err) {
     console.log('update password error', err.stack);
   } finally {
@@ -93,18 +93,7 @@ const updatePassward = async ({userId, newPassword, salt}) => {
   }
 };
 
-// const deleteSession = async() => {
-//   const client = await db.connect();
-//   try {
 
-//     console.log(`session delete successfully.`);
-//   } catch(err) {
-//     console.log('delete session error', err.stack);
-//   } finally {
-//     client.release();
-//   }
-
-// }
 
 
 module.exports = {createUser, getUser, getUserById, comparePassword, updatePassward}

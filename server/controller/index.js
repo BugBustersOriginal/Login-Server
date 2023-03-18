@@ -1,12 +1,11 @@
 const {createUser, getUser, getUserById, comparePassword, updatePassward} = require('../model')
 
+/*****  by username and password to sign up *******/
 const getSignUp = (req, res) => {
   //render signup page
   res.send('should render signup page');
 };
 
-
-/*****  by username and password to sign up *******/
 const postSignUp = async (req, res) => {
 /*dummy data
 {
@@ -102,24 +101,69 @@ const postLogIn = async (req, res) => {
   }
 };
 
-const forgetPassword = (req, res) => {
-  res.send('should render forget password');
+
+
+//render forget password page
+const passwordPage = (req, res) => {
+  res.send('should render forget password page');
 
 };
 
+//part1 way: forget password then get firstname and lastname and username, use these to find user and update new password
+//part 2: username set as email, then send link to email for change password
+const forgetPassword = async (req, res) => {
+  //part1 way:
+  //suppose req.body = {username: "debrazhang", firstname: "debra", lastname:"zhang", newPassword: ""}
+  if (!req.body.username || !req.body.firstname || !req.body.lastname) {
+    res.send('input should has username, firstname and lastname, render forgetPassword page');
+    return;
+  }
+  let findUser = await getUser({username: req.body.username});
+  if (findUser === null) {
+    //user not exist in db users, redirect to signup page
+    res.send('new user, redirect to signup page');
+  } else {
+    //check firstname and lastname is correct
+    if (findUser.firstname === req.body.firstname && findUser.lastname === req.body.lastname) {
+      //vertify success
+      if (!req.body.newPassword) {
+        res.send('input should have newPassword, render forgetPassword page')
+        return;
+      }
+      await updatePassward(findUser.id, req.body.newPassword);
+      console.log('set new password success');
+      res.send('set new password success, render login page');
+
+    } else {
+      res.send('verity wrong, render login page');
+   }
+
+
+  }
+};
+
+
+//render setting page
 const getSettings = (req, res) => {
-  res.send('rend settings');
-}
+  res.send('rend settings page');
+};
+
 //change password in settings(userId exist in db)
 const changePassword = async (req, res) => {
   //suppose req.url has userId,
   //request has the origin password and new password
   //req.body = {originPassword: '', newPassword: ''};
+
+  //must input a new password
+  if (req.body.newPassword === undefined ) {
+    res.send('new password is empty, render change password page')
+  }
+  //mock userId
   let userId = '4cf032b6-bf19-4fbd-bbca-aa677122c225';
   let user = await getUserById({id: userId});
   if (comparePassword(req.body.originPassword, user.password, user.salt)) {
     //password correct, change with new password with the previous salt
-    await updatePassward({userId, newPassword: req.body.newPassword, salt: user.salt});
+    await updatePassward(userId, req.body.newPassword);
     res.send('change password successfully');
   } else {
     res.send('password wrong, rerender changePassword page');
@@ -140,4 +184,5 @@ const getLogOut = async(req, res) => {
 const getGmailAuth = (req, res) => {
 
 };
-module.exports = {getSignUp, postSignUp, getLogIn, postLogIn, forgetPassword, changePassword, getSettings, getLogOut, getGmailAuth};
+
+module.exports = {getSignUp, postSignUp, getLogIn, postLogIn, passwordPage,forgetPassword, getSettings, changePassword, getLogOut, getGmailAuth};
