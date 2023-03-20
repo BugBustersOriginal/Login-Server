@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "BOC login and signup and signout server",
   "scripts": {
-    "test": "test",
+    "test": "jest --coverage",
     "start": "nodemon server/index.js"
   },
   "author": "Debra",
