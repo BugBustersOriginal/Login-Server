@@ -14,6 +14,7 @@
   "homepage": "https://github.com/Hackreactor-2207-BugBusters-BOC/Login-Server#readme",
   "dependencies": {
     "connect-pg-simple": "^8.0.0",
+    "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",

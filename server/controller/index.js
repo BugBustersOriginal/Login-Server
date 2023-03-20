@@ -1,4 +1,5 @@
-const {createUser, getUser, getUserById, comparePassword, updatePassward} = require('../model')
+const {createUser, getUser, getUserById, updatePassward} = require('../model')
+const {compareHash} = require('../lib/hashUtils.js')
 
 /*****  by username and password to sign up *******/
 const getSignUp = (req, res) => {
@@ -23,6 +24,12 @@ const postSignUp = async (req, res) => {
 }
 
 */
+  // console.log('integration register test',req.body);
+
+  // if photo is undefined, give a default photo
+  if (req.body.photo === undefined) {
+    req.body.photo = 'https://as2.ftcdn.net/v2/jpg/03/03/62/45/1000_F_303624505_u0bFT1Rnoj8CMUSs8wMCwoKlnWlh5Jiq.jpg';
+  }
   // check request has both username and password
   if (req.body.username === undefined || req.body.password === undefined) {
     res.send('should input both username and password, redirect to signup page');
@@ -36,10 +43,17 @@ const postSignUp = async (req, res) => {
      let addUser = await createUser(req.body);
 
      //render login page, can it go direct into main page?
-     res.send('signup success, should render login page');
+     res.send({
+      'reminder': 'signup success, should render login page',
+      'url':'/login'
+    });
     } else {
      //user exist, render signup page
-     res.send('alert user that username exist, if want to login please move to login page, or get a new username, rerender signup page');
+     res.send({
+      'reminder': 'alert user that username exist, if want to login please move to login page, or get a new username, rerender signup page',
+      'alert': `${req.body.username} exist, get a new username or go to login `,
+      'url':'/register'
+     });
     }
   } catch (err) {
     console.log('signup error', err);
@@ -74,7 +88,7 @@ const postLogIn = async (req, res) => {
         //exist user, compare password in db
         let salt = findUser.salt;
         let passwordHashed = findUser.password;
-        if (comparePassword(req.body.password, passwordHashed, salt)) {
+        if (compareHash(req.body.password, passwordHashed, salt)) {
           //password correct, assign a new session and save sessionid into cookie
           let userId = findUser.id;
           req.session.userId = userId;
@@ -161,7 +175,7 @@ const changePassword = async (req, res) => {
   //mock userId
   let userId = '4cf032b6-bf19-4fbd-bbca-aa677122c225';
   let user = await getUserById({id: userId});
-  if (comparePassword(req.body.originPassword, user.password, user.salt)) {
+  if (compareHash(req.body.originPassword, user.password, user.salt)) {
     //password correct, change with new password with the previous salt
     await updatePassward(userId, req.body.newPassword);
     res.send('change password successfully');

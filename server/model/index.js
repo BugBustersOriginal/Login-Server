@@ -64,11 +64,7 @@ const getUserById = async({id}) => {
     client.release();
   }
 }
-//compare password
-const comparePassword = (actual, passwordHashed, salt) => {
-  return passwordHashed === utils.createHash(actual, salt);
 
-};
 
 
 
@@ -96,4 +92,4 @@ const updatePassward = async (userId, newPassword) => {
 
 
 
-module.exports = {createUser, getUser, getUserById, comparePassword, updatePassward}
+module.exports = {createUser, getUser, getUserById, updatePassward}

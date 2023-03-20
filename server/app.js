@@ -1,21 +1,22 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 
 const {getSignUp, postSignUp, getLogIn, postLogIn, passwordPage, forgetPassword, getSettings,changePassword, getLogOut, getGmailAuth} = require('./controller/index.js');
 const pgPool = require('../database/index.js');
-
 //create http to https middleware
 // function redirectToHttps(req, res, next) {
-//   if (req.headers['x-forwarded-proto'] !== 'https') {
-//     return res.redirect(`https://${req.hostname}${req.url}`);
-//   }
-//   return next();
-// }
+  //   if (req.headers['x-forwarded-proto'] !== 'https') {
+    //     return res.redirect(`https://${req.hostname}${req.url}`);
+    //   }
+    //   return next();
+    // }
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 //use redirectToHttps as middleware
 // app.use(redirectToHttps);

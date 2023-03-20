@@ -1,13 +1,9 @@
+require('dotenv').config();
 const { Pool } = require('pg');
 const uuid = require('pg-uuid');
+const config = require(`../config/${process.env.NODE_ENV}`)
 
-const pool = new Pool({
-  user: 'vaan',
-  host: 'localhost',
-  database: 'postgres',
-  password: '',
-  port: 5432,
-});
+const pool = new Pool(config);
 
 (async () => {
   const client = await pool.connect();
@@ -61,7 +57,7 @@ const pool = new Pool({
   }
   finally {
     client.release();
-    // pool.end();
+    await client.end();
   }
 })();
 

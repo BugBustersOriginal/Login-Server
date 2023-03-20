@@ -1,4 +1,4 @@
-const { createHash, compareHash} = require('../server/lib/hashUtils');
+const { createHash, compareHash, createRandom32String} = require('../server/lib/hashUtils');
 
 describe('createHash function', () => {
   it ('should create a hash with salt', () => {
@@ -14,5 +14,10 @@ describe('createHash function', () => {
     const expectHash = 'd3e46b63c52e4073f1df20bd064c70cd20cba15d7d607888eabca58cb792d809';
     const result = compareHash(password, expectHash, salt);
     expect(result).toBe(true);
+  });
+  it('should have random 32 string', () => {
+    const result = createRandom32String();
+    expect(result).toHaveLength(32);
   })
+
 });
