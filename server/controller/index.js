@@ -2,10 +2,10 @@ const {createUser, getUser, getUserById, updatePassward} = require('../model')
 const {compareHash} = require('../lib/hashUtils.js')
 
 /*****  by username and password to sign up *******/
-const getSignUp = (req, res) => {
-  //render signup page
-  res.send('should render signup page');
-};
+// const getSignUp = (req, res) => {
+//   //render signup page
+//   res.send('should render signup page');
+// };
 
 const postSignUp = async (req, res) => {
 /*dummy data
@@ -32,7 +32,10 @@ const postSignUp = async (req, res) => {
   }
   // check request has both username and password
   if (req.body.username === undefined || req.body.password === undefined) {
-    res.send('should input both username and password, redirect to signup page');
+    res.send({
+      'reminder':'should input both username and password, redirect to signup page',
+      'url':'/register'
+    });
   }
   const {username} = req.body;
 
@@ -62,10 +65,16 @@ const postSignUp = async (req, res) => {
 
 const getLogIn = (req, res) => {
   if (req.session.userId ) {
-    res.send(`hello, userId=${req.session.userId}`)
+    res.send({
+      'reminder':`hello, userId=${req.session.userId}`,
+      'url':`/home?userId=${userId}`
+  })
   } else {
     //render login page
-    res.send('should render login page')
+    res.send({
+      'reminder':'should render login page',
+      'url':'/login'
+    })
 
   }
 
@@ -77,13 +86,20 @@ const postLogIn = async (req, res) => {
   if (req.session.userId === undefined) {
     // username and password all filled in
     if (req.body.username === undefined || req.body.password === undefined) {
-      res.send('should input both username and password,redirect to login page');
+      res.send({
+        'reminder': 'should input both username and password,redirect to login page',
+        'url': '/login'
+      });
     } else {
       let {username, password} = req.body;
       let findUser = await getUser({username});
       if (findUser === null) {
         //user not exist in db users, redirect to signup page
-        res.send('new user, redirect to signup page');
+        res.send({
+          'reminder':'new user, redirect to signup page',
+          'url':'/register',
+          'alert':`${req.body.username} is a new user, register first`
+        });
       } else {
         //exist user, compare password in db
         let salt = findUser.salt;
@@ -103,15 +119,25 @@ const postLogIn = async (req, res) => {
             });
           });
           //render to app main page
-          res.send('seesion set success, render app main page')
+          res.send({
+            'reminder': 'seesion set success, render app main page',
+            'url':`/home?userId=${userId}`
+          })
         } else {
           //user exist, password not correct, redirect to login page
-          res.send('password incorrect, redirect to login page');
+          res.send({
+            'reminder': 'password incorrect, redirect to login page',
+            'url':'/login',
+            'alert':'password incorrect'
+          });
         }
       }
     }
   } else {
-    res.send('exist user, render app main page')
+    res.send({
+      'reminder':'exist user, render app main page',
+      'url':`/home?userId=${userId}`
+    })
   }
 };
 
@@ -199,4 +225,4 @@ const getGmailAuth = (req, res) => {
 
 };
 
-module.exports = {getSignUp, postSignUp, getLogIn, postLogIn, passwordPage,forgetPassword, getSettings, changePassword, getLogOut, getGmailAuth};
+module.exports = { postSignUp, getLogIn, postLogIn, passwordPage,forgetPassword, getSettings, changePassword, getLogOut, getGmailAuth};

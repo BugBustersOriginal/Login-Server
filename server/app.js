@@ -4,7 +4,7 @@ const cors = require('cors');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 
-const {getSignUp, postSignUp, getLogIn, postLogIn, passwordPage, forgetPassword, getSettings,changePassword, getLogOut, getGmailAuth} = require('./controller/index.js');
+const {postSignUp, getLogIn, postLogIn, passwordPage, forgetPassword, getSettings,changePassword, getLogOut, getGmailAuth} = require('./controller/index.js');
 const pgPool = require('../database/index.js');
 //create http to https middleware
 // function redirectToHttps(req, res, next) {
@@ -33,7 +33,7 @@ app.use(session({
   cookie: { maxAge:  5* 60 * 1000 } // 5min
 }));
 
-app.get('/signup', getSignUp );
+
 app.post('/signup', postSignUp);
 app.get('/login', getLogIn);
 app.post('/login',postLogIn);
