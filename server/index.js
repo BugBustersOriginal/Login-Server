@@ -9,11 +9,11 @@ const app = require('./app.js');
 
 /*****  Load SSL/TLS certificate and key ****/
 // const options = {
-//   key: fs.readFileSync(path.resolve(__dirname, '../key.pem')),
+//    key: fs.readFileSync(path.resolve(__dirname, '../key.pem')),
 //   cert: fs.readFileSync(path.resolve(__dirname,'../cert.pem'))
-// };
+//  };
 /******  Create HTTPS server *****/
-// const server = https.createServer(options, app);
+//  const server = https.createServer(options, app);
 
 // server.listen(process.env.port, () => {
 //   console.log(`Login-Server is listening on ${process.env.port}`);

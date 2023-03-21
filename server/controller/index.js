@@ -136,7 +136,7 @@ const postLogIn = async (req, res) => {
   } else {
     res.send({
       'reminder':'exist user, render app main page',
-      'url':`/home?userId=${userId}`
+      'url':`/home?userId=${req.session.userId}`
     })
   }
 };
@@ -211,11 +211,14 @@ const changePassword = async (req, res) => {
 };
 
 const getLogOut = async(req, res) => {
-  const { sessionId } = req.session;
+  const userId  = req.session.userId;
   req.session.destroy();
   res.clearCookie('connect.sid');
-  console.log("session delete success");
-  res.send('render login page');
+  console.log(`userId=${userId} delete success`);
+  res.send({
+    'reminder':'render login page',
+    'url':'/login'
+  });
 
 };
 
